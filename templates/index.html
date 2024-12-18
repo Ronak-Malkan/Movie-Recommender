@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Recommender</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f8;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #333;
+      }
+      .container {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 600px;
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+      }
+      label {
+        font-weight: bold;
+        display: block;
+        margin-top: 20px;
+      }
+      input[type="text"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: block;
+        margin-top: 5px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      #recommendations div {
+        background-color: #ecf0f1;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Movie Recommendation System</h1>
+      <label for="user_id">User ID:</label>
+      <input type="text" id="user_id" />
+      <label for="genre">Genre:</label>
+      <input type="text" id="genre" />
+      <button onclick="fetchRecommendations()">Get Recommendations</button>
+      <div id="recommendations"></div>
+    </div>
+    <script>
+      async function fetchRecommendations() {
+        const userId = document.getElementById("user_id").value;
+        const genre = document.getElementById("genre").value;
+        const response = await fetch("/recommend", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user_id: userId, genre: genre }),
+        });
+        const data = await response.json();
+        displayRecommendations(data);
+      }
+
+      function displayRecommendations(recommendations) {
+        const container = document.getElementById("recommendations");
+        container.innerHTML = ""; // Clear previous recommendations
+        recommendations.forEach((rec) => {
+          const title = rec[0]; // Assuming JSON objects with title and rating
+          const rating = rec[1]; // Adjust according to your actual data structure
+          const div = document.createElement("div");
+          div.textContent = `${title} - Predicted Rating: ${rating.toFixed(2)}`;
+          container.appendChild(div);
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+.DS_Store
+.vscode
+venv
+svd_model.pkl
+movies.csv
+ratings.csv
